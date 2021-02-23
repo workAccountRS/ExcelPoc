@@ -4,7 +4,8 @@ from openpyxl import load_workbook
 
 class ExcelHandler:
 
-    def __init__(self, fileName="testFile.xlsx"):
+
+    def __init__(self, fileName="testFile.xlsx", dataOnlyFlag=False):
         # TO FIND THE FILE IN THE PREVIOUS LEVEL OR 2 LEVELS BEHIND
         try:
             directory = os.path.abspath('.')
@@ -16,7 +17,8 @@ class ExcelHandler:
 
         # self.wb = load_workbook(filepathRead)  # LOAD THE EXCEL FILE AND STORE IT IN THE wb OBJECT
 
-        self.wb = load_workbook(fileName)  # LOAD THE EXCEL FILE AND STORE IT IN THE wb OBJECT
+        self.wb = load_workbook(fileName, data_only=dataOnlyFlag)  # LOAD THE EXCEL FILE AND STORE IT IN THE wb OBJECT
+
 
 
     # RETURNS ALL CELLS IN A GIVEN COLUMN
@@ -40,7 +42,6 @@ class ExcelHandler:
         sheet = self.wb[sheet]
         return sheet[str(cell)].value
 
-
     def getMaxRow(self, sheet="S2T Mapping", cell="A1"):
         sheet = self.wb[sheet]
         return sheet.max_row
@@ -49,11 +50,9 @@ class ExcelHandler:
         sheet = self.wb[sheet]
         return sheet.max_column
 
-    def writeCell(self, sheet="S2T Mapping", cell="A1" , value=0):
+    def writeCell(self, sheet="S2T Mapping", cell="A1", value=0):
         sheet = self.wb[sheet]
         sheet[cell] = value
-
-
 
     def saveSpreadSheet(self, fileName='testFile.xlsx'):
         self.wb.save(filename=fileName)
