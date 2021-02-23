@@ -92,7 +92,7 @@ for rowNumber in range(4, excelHandler.getMaxRow(sheet='Relational DB') + 1):
     db.insertIntoRelationalDB(currentRowData[0],
                               currentRowData[1],
                               currentRowData[2],
-                              currentRowData[2], # HERE
+                              currentRowData[3],
                               currentRowData[4],
                               currentRowData[5],
                               currentRowData[6],

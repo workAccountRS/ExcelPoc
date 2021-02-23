@@ -5,7 +5,7 @@ from openpyxl import load_workbook
 class ExcelHandler:
 
 
-    def __init__(self, fileName="testFile.xlsx", dataOnlyFlag=False):
+    def __init__(self, fileName="testFile.xlsx", dataOnlyFlag=True):
         # TO FIND THE FILE IN THE PREVIOUS LEVEL OR 2 LEVELS BEHIND
         try:
             directory = os.path.abspath('.')
