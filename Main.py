@@ -121,7 +121,7 @@ for rowNumber in range(2, excelHandler.getMaxRow(sheet='S2T Mapping') + 1):
 # Save the spreadsheet
 excelHandler.saveSpreadSheet(fileName=InputFileName)
 
-selectedRow = db.getRowByNumber(rowNumber=500)
+selectedRow = db.getRowByNumber(rowNumber=1)
 
 # db.printDescription()
 # db.print2()

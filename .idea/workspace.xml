@@ -4,9 +4,6 @@
     <list default="true" id="2b964cb5-145e-45b3-98e5-f00ccf32e797" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/DB.py" beforeDir="false" afterPath="$PROJECT_DIR$/DB.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Main.py" beforeDir="false" afterPath="$PROJECT_DIR$/Main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/landing_DB.csv" beforeDir="false" afterPath="$PROJECT_DIR$/landing_DB.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/testFile.xlsx" beforeDir="false" afterPath="$PROJECT_DIR$/testFile.xlsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -234,7 +231,14 @@
       <option name="project" value="LOCAL" />
       <updated>1614151342027</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Commit#ADD GET ROW FROM DB">
+      <created>1614153379014</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1614153379014</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
@@ -244,6 +248,7 @@
     <MESSAGE value="Commit#3" />
     <MESSAGE value="Commit#4" />
     <MESSAGE value="Commit#Test" />
-    <option name="LAST_COMMIT_MESSAGE" value="Commit#Test" />
+    <MESSAGE value="Commit#ADD GET ROW FROM DB" />
+    <option name="LAST_COMMIT_MESSAGE" value="Commit#ADD GET ROW FROM DB" />
   </component>
 </project>
