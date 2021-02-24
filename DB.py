@@ -1,6 +1,7 @@
 import cx_Oracle
 import config
 
+# TEST 1
 
 class DB:
     connection = None
