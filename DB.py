@@ -53,6 +53,14 @@ class DB:
 
             print('---------------------relational_db---------------------')
 
+    def getRowByNumber(self, rowNumber='1'):
+        sql = """with cte as (select relational_db.*, ROW_NUMBER() OVER (ORDER BY batch_id) R from relational_db) select * from cte where R =2""".format(rowNumber)
+        print(':::::', sql)
+        cursor = self.connection.cursor()
+        for each in cursor.execute(sql):
+            print(each)
+            return each
+
     def insertIntoLandingDB(self, sheetSource='', cellSource='', cellContent='', TimeStamp='', BatchID=''):
         sql = """INSERT INTO LANDING_DB (Sheet_Source,Cell_Source,Cell_Content,Time_Stamp,Batch_ID)
         values ('{0}','{1}','{2}','{3}','{4}', '{5}')""".format(sheetSource, cellSource, cellContent, TimeStamp,
@@ -61,6 +69,7 @@ class DB:
         cursor = self.connection.cursor()
         cursor.execute(sql)
         self.connection.commit()
+
 
     def insertIntoRelationalDB(self, PUBLICATION_NAME_AR,
                     PUBLICATION_NAME_EN,
