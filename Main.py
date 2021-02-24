@@ -44,6 +44,8 @@ for rowNumber in range(2, excelHandler.getMaxRow(sheet='S2T Mapping') + 1):
     cell_target = currentRowData[3]
     dataType = currentRowData[4]
 
+
+
     if sheet_target == 'NA':
         skipedRows.append(rowNumber)
         continue
@@ -71,6 +73,7 @@ for rowNumber in range(2, excelHandler.getMaxRow(sheet='S2T Mapping') + 1):
         # WRITE TO LANDING DB
         # GET MAX COLUMN
 
+        # LOOP FROM A TO LAST COL
         excelHandler.writeCell(sheet='Landing DB', cell=str('A' + str(lastRow)), value=sheet_source)
         excelHandler.writeCell(sheet='Landing DB', cell=str('B' + str(lastRow)), value=cell_source)
         excelHandler.writeCell(sheet='Landing DB', cell=str('C' + str(lastRow)), value=source_data)
@@ -80,7 +83,7 @@ for rowNumber in range(2, excelHandler.getMaxRow(sheet='S2T Mapping') + 1):
         db.insertIntoLandingDB(sheet_source, cell_source, source_data, currentTime, BatchID, dataType)
 
     except Exception as e:
-        print("ERROR IN ROW#" + str(rowNumber) + " -- " + e)
+        print("ERROR IN ROW#" + str(rowNumber) + " -- " + str(e))
         errors.append(['ROW NUMBER:' + str(rowNumber), 'CELL SOURCE:' + cell_source, 'CELL TARGET:' + cell_target])
 
     # NEXT ROW TO WRITE

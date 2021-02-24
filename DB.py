@@ -51,10 +51,10 @@ class DB:
 
             print('---------------------relational_db---------------------')
 
-    def insertIntoLandingDB(self, sheetSource='', cellSource='', cellContent='', TimeStamp='', BatchID='', dataType=''):
-        sql = """INSERT INTO LANDING_DB (Sheet_Source,Cell_Source,Cell_Content,Time_Stamp,Batch_ID, DATA_TYPE)
+    def insertIntoLandingDB(self, sheetSource='', cellSource='', cellContent='', TimeStamp='', BatchID=''):
+        sql = """INSERT INTO LANDING_DB (Sheet_Source,Cell_Source,Cell_Content,Time_Stamp,Batch_ID)
         values ('{0}','{1}','{2}','{3}','{4}', '{5}')""".format(sheetSource, cellSource, cellContent, TimeStamp,
-                                                                BatchID, dataType)
+                                                                BatchID)
         print(':::::', sql)
         cursor = self.connection.cursor()
         cursor.execute(sql)
@@ -85,7 +85,7 @@ class DB:
                     SOURCE_EN,
                     TIME_STAMP, Batch_ID ):
         sql = """insert into RELATIONAL_DB ( PUBLICATION_NAME_AR, PUBLICATION_NAME_EN, PUBLICATION_DATE_AR, 
-        PUBLICATION_DATE_EN, TABLE_ID, REP_NAME_AR, REP_NAME_EN, TEM_ID, AGE_GROUP_AR, AGE_GROUP_EN, SEX_AR, SEX_EN, 
+        PUBLICATION_DATE_EN, TABLE_ID, REP_NAME_AR, REP_NAME_EN, TEM_ID, CL_AGE_GROUP_AR_V1, CL_AGE_GROUP_EN_V1, CL_SEX_AR_V1, CL_SEX_EN_V2, 
         OBS_VALUE, TIME_PERIOD_Y, TIME_PERIOD_M, NOTE1_AR, NOTE1_EN, NOTE2_AR, NOTE2_EN, NOTE3_AR, NOTE3_EN, 
         SOURCE_AR, SOURCE_EN, TIME_STAMP, BATCH_ID) values (
         '{0}' ,
@@ -179,3 +179,4 @@ class DB:
     #     if not rows:
     #         break
     #     cursor_dev.executemany(sql_load, rows)
+
