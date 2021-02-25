@@ -6,7 +6,8 @@ import config
 
 class DB:
     connection = None
-
+    cx_Oracle.init_oracle_client(
+        lib_dir=r"C:\Users\Hanoof.Alqadeh\Downloads\instantclient-basic-windows.x64-18.5.0.0.0dbru\instantclient_18_5")
     def __init__(self):
         print('DB...')
         try:
@@ -138,23 +139,59 @@ class DB:
         cursor.execute(sql)
         self.connection.commit()
 
+    def insertIntos2t_mapping(self, SHEET_SOURCE,
+                               CELL_SOURCE,
+                               SHEET_TARGET,
+                               CELL_TARGET,
+                               CELL_TYPE,
+                               DESC_AR,
+                               DATA_TYPE,
+                               IS_MANDARORY,
+                               REF_DICTIONARY ):
+         sql = """INSERT INTO S2T_MAPPING (SHEET_SOURCE,CELL_SOURCE,SHEET_TARGET,CELL_TARGET,CELL_TYPE,DESC_AR,DATA_TYPE,IS_MANDARORY ,REF_DICTIONARY)
+                values ('{0}','{1}','{2}','{3}','{4}', '{5}', '{6}', '{7}','{8}')""".format(SHEET_SOURCE, CELL_SOURCE, SHEET_TARGET, CELL_TARGET,
+                                                                        CELL_TYPE,DESC_AR,DATA_TYPE,IS_MANDARORY,REF_DICTIONARY)
+         print(':::::', sql)
+         cursor = self.connection.cursor()
+         cursor.execute(sql)
+
+         self.connection.commit()
+
+    def insertIntoref_dictionary(self, DESCRIPTION,ID,CL_ID):
+         sql = """INSERT INTO REF_DICTIONARY (DESCRIPTION,ID,CL_ID)
+                values ('{0}','{1}','{2}')""".format(DESCRIPTION, ID, CL_ID)
+
+         print(':::::', sql)
+         cursor = self.connection.cursor()
+         cursor.execute(sql)
+         self.connection.commit()
+
+
+
     def print2(self):
         db = cx_Oracle.connect('{0}/{1}@{2}:{3}/{4}'.format(config.username,
                                                             config.password,
                                                             config.dsn,
                                                             config.port,
                                                             config.SERVICE_NAME))
-
         cursor = db.cursor()
-        SQL = "SELECT * FROM relational_db"
+        SQL = "SELECT * FROM s2t_mapping"
         cursor.execute(SQL)
         for record in cursor:
-            print('relational_db', record)
+            print('s2t_mapping', record)
 
-        SQL = "SELECT * FROM landing_db"
-        cursor.execute(SQL)
-        for record in cursor:
-            print('landing_db', record)
+        # cursor = db.cursor()
+        # SQL = "SELECT * FROM relational_db"
+        # cursor.execute(SQL)
+        # for record in cursor:
+        #     print('relational_db', record)
+        #
+        # SQL = "SELECT * FROM landing_db"
+        # cursor.execute(SQL)
+        # for record in cursor:
+        #     print('landing_db', record)
+
+
 
     def closeConnection(self):
         # release the connection

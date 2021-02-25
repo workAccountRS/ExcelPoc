@@ -23,17 +23,8 @@ currentTime = Utilities.getCurrentTime()
 skipedRows = []
 errors = []
 
-# CREATE CSV
-with open('landing_DB.csv', 'a+') as csv_file:
-    pass
 
-# ADD HEADER (CSV)
-with open('landing_DB.csv') as csv_file:
-    row_count = sum(1 for row in csv_file)
-    if row_count == 0:
-        with open('landing_DB.csv', 'a', newline='') as csv_file:
-            writer = csv.writer(csv_file, delimiter='#')
-            writer.writerows([['Sheet_Source', 'Cell_Source', 'Cell_Content', 'Time_Stamp', 'Batch_ID']])
+
 
 # LOOP THROUGH THE MAP
 for rowNumber in range(2, excelHandler.getMaxRow(sheet='S2T Mapping') + 1):
@@ -61,9 +52,6 @@ for rowNumber in range(2, excelHandler.getMaxRow(sheet='S2T Mapping') + 1):
     # TASK 2 FILL THE LANDING DB:
     # Sheet_Source | Cell_Source | Cell_Content	| Time_Stamp | Batch_ID
 
-    with open('landing_DB.csv', 'a', newline='') as csv_file:
-        writer = csv.writer(csv_file, delimiter='#')
-        writer.writerow([sheet_source, cell_source, source_data, currentTime, str(BatchID)])
 
     # WRITING ON A EXCEL FILE (Write Test)
     try:
@@ -125,6 +113,12 @@ selectedRow = db.getRowByNumber(rowNumber=500)
 
 # db.printDescription()
 # db.print2()
+
+db.insertIntos2t_mapping('hnoof','hnoof','hnoof','hnoof','hnoof','hnoof','hnoof','hnoof','hnoof')
+db.print2()
+
+
+
 db.closeConnection()
 
 
