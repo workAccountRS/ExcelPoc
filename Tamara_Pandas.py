@@ -25,7 +25,7 @@ vals = [['CL_AGE_GROUP_EN_V1', None, '15 - 24'],
         ['CL_SEX_AR_V1', None, 'الجملة'],
         ['CL_SEX_EN_V2', None, 'Male'],
         ['CL_SEX_EN_V2', None, 'Female'],
-        ['CL_SEX_EN_V2', None, 'Total ']]
+        ['CL_SEX_EN_V2', None, 'Total']]
 
 ref_dict = pd.DataFrame(vals, columns=['CL_ID', 'ID', 'DESCRIPTION'])
 
@@ -99,10 +99,10 @@ for i in [*input.columns]:
     except:
         continue
 for t in input.itertuples():
-    if not t.OBS_VALUE != t.OBS_VALUE:
+    if t.Obs_toNumber != t.Obs_toNumber:
+
         input.at[t.Index, 'Obs_toNumber'] = pd.to_numeric(t.OBS_VALUE[:-1])
 
-print(input['Obs_toNumber'])
 
 # GET MIN MAX
 

@@ -13,8 +13,11 @@ class ValidationRules:
             return isinstance(input, str)
 
         elif data_type == "number":
-            number_types = (int, float, complex)
-            return isinstance(input, number_types)
+            try:
+                float(input)
+                return True
+            except:
+                return False
 
         elif data_type == "date":
             try:
@@ -46,7 +49,7 @@ class ValidationRules:
             return abs(prev - input) == freq
 
     def check_dict(self,input,col_name,lookup):
-       if input in [row['DESCRIPTION'] for col, row in lookup.iterrows() if row['CL_ID'] == col_name]:
+       if str(input).strip().upper() in [row['DESCRIPTION'].strip().upper() for col, row in lookup.iterrows() if row['CL_ID'] == col_name]:
            return True
        else:
            return False
