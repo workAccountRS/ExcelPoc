@@ -24,16 +24,16 @@ try:
                                                             config.port,
                                                             config.SERVICE_NAME))
 
-            cursor = db.cursor()
-            SQL = "SELECT * FROM relational_db"
-            cursor.execute(SQL)
-            for record in cursor:
-                print('relational_db', record)
-
-            SQL = "SELECT * FROM landing_db"
-            cursor.execute(SQL)
-            for record in cursor:
-                print('landing_db', record)
+            # cursor = db.cursor()
+            # SQL = "SELECT * FROM relational_db"
+            # cursor.execute(SQL)
+            # for record in cursor:
+            #     print('relational_db', record)
+            #
+            # SQL = "SELECT * FROM landing_db"
+            # cursor.execute(SQL)
+            # for record in cursor:
+            #     print('landing_db', record)
 
             print('-------------------landing_db------------------------')
 
@@ -42,10 +42,9 @@ try:
             cursor.execute(sql)
             for each in cursor.description:
                 print(each[0:2])
-            for each in cursor.execute(sql):
-                print(each)
 
-                print('-------------------landing_db------------------------')
+
+            print('-------------------landing_db------------------------')
 
             print('---------------------relational_db---------------------')
 
@@ -57,7 +56,33 @@ try:
             for each in cursor.description:
                 print(each[0:2])
 
-                print('---------------------relational_db---------------------')
+            print('---------------------relational_db---------------------')
+
+            print('---------------------s2t_mapping---------------------')
+
+            sql = """SELECT * FROM s2t_mapping """
+
+            cursor = connection.cursor()
+            cursor.execute(sql)
+            c = 0
+            for each in cursor.description:
+                print(each[0:2])
+
+            print('---------------------s2t_mapping---------------------')
+
+
+            print('---------------------ref_dictionary ---------------------')
+
+            sql = """SELECT * FROM ref_dictionary """
+
+            cursor = connection.cursor()
+            cursor.execute(sql)
+            c = 0
+            for each in cursor.description:
+                print(each[0:2])
+
+            print('---------------------ref_dictionary---------------------')
+
 
 
 except cx_Oracle.Error as error:
