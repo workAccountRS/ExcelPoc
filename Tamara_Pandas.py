@@ -4,31 +4,41 @@ import config
 
 from ValidationRules import ValidationRules
 from tableChecks2 import Table2
-
-rules = ValidationRules()
+from openpyxl import load_workbook
 
 ########################################################################################################################
 
-vals = [['CL_AGE_GROUP_En_V1', None, '15 - 24'],
-        ['CL_AGE_GROUP_En_V1', None, '25 - 29'],
-        ['CL_AGE_GROUP_En_V1', None, '30 - 34'],
-        ['CL_AGE_GROUP_En_V1', None, '35 - 39'],
-        ['CL_AGE_GROUP_En_V1', None, '40 and Above'],
-        ['CL_AGE_GROUP_En_V1', None, 'Total'],
-        ['CL_AGE_GROUP_Ar_V1', None, '15 - 24'],
-        ['CL_AGE_GROUP_Ar_V1', None, '25 - 29'],
-        ['CL_AGE_GROUP_Ar_V1', None, '30 - 34'],
-        ['CL_AGE_GROUP_Ar_V1', None, '35 - 39'],
-        ['CL_AGE_GROUP_Ar_V1', None, '40 فـأعلـــى'],
-        ['CL_AGE_GROUP_Ar_V1', None, 'الجملة '],
-        ['CL_SEX_Ar_V1', None, 'ذكور'],
-        ['CL_SEX_Ar_V1', None, 'إناث'],
-        ['CL_SEX_Ar_V1', None, 'الجملة'],
-        ['CL_SEX_En_V2', None, 'Male'],
-        ['CL_SEX_En_V2', None, 'Female'],
-        ['CL_SEX_En_V2', None, 'Total ']]
+vals = [['CL_AGE_GROUP_EN_V1', None, '15 - 24'],
+        ['CL_AGE_GROUP_EN_V1', None, '25 - 29'],
+        ['CL_AGE_GROUP_EN_V1', None, '30 - 34'],
+        ['CL_AGE_GROUP_EN_V1', None, '35 - 39'],
+        ['CL_AGE_GROUP_EN_V1', None, '40 and Above'],
+        ['CL_AGE_GROUP_EN_V1', None, 'Total'],
+        ['CL_AGE_GROUP_AR_V1', None, '15 - 24'],
+        ['CL_AGE_GROUP_AR_V1', None, '25 - 29'],
+        ['CL_AGE_GROUP_AR_V1', None, '30 - 34'],
+        ['CL_AGE_GROUP_AR_V1', None, '35 - 39'],
+        ['CL_AGE_GROUP_AR_V1', None, '40 فـأعلـــى'],
+        ['CL_AGE_GROUP_AR_V1', None, 'الجملة '],
+        ['CL_SEX_AR_V1', None, 'ذكور'],
+        ['CL_SEX_AR_V1', None, 'إناث'],
+        ['CL_SEX_AR_V1', None, 'الجملة'],
+        ['CL_SEX_EN_V2', None, 'Male'],
+        ['CL_SEX_EN_V2', None, 'Female'],
+        ['CL_SEX_EN_V2', None, 'Total ']]
 
 ref_dict = pd.DataFrame(vals, columns=['CL_ID', 'ID', 'DESCRIPTION'])
+
+# SETUP SAVE TO EXCEL
+
+fileName = 'Output.xlsx'
+
+book = load_workbook(fileName)
+writer = pd.ExcelWriter(fileName, engine='openpyxl')
+writer.book = book
+writer.sheets = {ws.title: ws for ws in book.worksheets}
+
+rules = ValidationRules()
 
 ########################################################################################################################
 
@@ -40,7 +50,7 @@ connection = cx_Oracle.connect('{0}/{1}@{2}:{3}/{4}'.format(config.username,
                                                             config.port,
                                                             config.SERVICE_NAME))
 
-query = """SELECT * FROM RELATIONAL_DB"""
+query = """SELECT * FROM relational_db_t22v2"""
 df_input = pd.read_sql(query, con=connection)
 connection.close()
 
@@ -60,17 +70,17 @@ for column, row in df_input.iterrows():
         df_pass = df_pass.append(pd.DataFrame([[*row.values]], columns=df_pass.columns), ignore_index=True)
 
 # OUTPUT GOOD AND BAD ROWS
-#df_fail.to_excel("Output.xlsx",sheet_name='fail')
-#df_pass.to_excel("Output.xlsx",sheet_name='pass')
+sheetName = 'fail'
+df_fail.to_excel(writer, sheet_name=sheetName, startrow=writer.sheets[sheetName].max_row, index=False)
+sheetName = 'pass'
+df_pass.to_excel(writer, sheet_name=sheetName, startrow=writer.sheets[sheetName].max_row, index=False)
 
 #############################################REPORTING###########################################################
-
 
 
 input = df_input.assign(Obs_toNumber=pd.to_numeric(df_input['OBS_VALUE'], errors='coerce'))
 input = input.assign(MONTH=[i.split('-')[1].strip() for i in input['TIME_PERIOD_M']])
 input = input.assign(DATE=pd.to_datetime(input['MONTH'] + '-' + input['TIME_PERIOD_Y'].astype(str)))
-
 
 # PREPROCESS DATA
 
@@ -92,12 +102,15 @@ for t in input.itertuples():
     if not t.OBS_VALUE != t.OBS_VALUE:
         input.at[t.Index, 'Obs_toNumber'] = pd.to_numeric(t.OBS_VALUE[:-1])
 
+print(input['Obs_toNumber'])
+
 # GET MIN MAX
 
-temp_list = [input.Obs_toNumber.idxmin(), input.Obs_toNumber.idxmin()]
+temp_list = [input.Obs_toNumber.idxmin(), input.Obs_toNumber.idxmax()]
 min_max = input.iloc[temp_list].sort_values(by='Obs_toNumber')
 
-#min_max.to_excel("Output.xlsx",sheet_name='min_max')
+sheetName = 'min_max'
+min_max.to_excel(writer, sheet_name=sheetName, startrow=writer.sheets[sheetName].max_row, index=False)
 
 # GET DIFFERENCE AND PERCENTAGE DIFFERENCE
 
@@ -110,12 +123,14 @@ for i in range(len(diff) - 1):
         if diff['Obs_toNumber'][i] == 0:
             continue
         else:
-            diff.at[i + 1, 'perc_diff'] = (diff['Obs_toNumber'][i + 1] - diff['Obs_toNumber'][i]) / diff['Obs_toNumber'][i] * 100
+            diff.at[i + 1, 'perc_diff'] = (diff['Obs_toNumber'][i + 1] - diff['Obs_toNumber'][i]) / \
+                                          diff['Obs_toNumber'][i] * 100
     else:
         continue
 diff = diff.sort_values(by=['DATE', 'CL_SEX_EN_V2', 'CL_AGE_GROUP_EN_V1']).reset_index()
 
-#diff.to_excel("Output.xlsx",sheet_name='changes')
+sheetName = 'changes'
+diff.to_excel(writer, sheet_name=sheetName, startrow=writer.sheets[sheetName].max_row, index=False)
 
 # FREQ CHECK
 
@@ -124,7 +139,8 @@ freq = freq.assign(FREQ=None)
 for i in range(len(freq) - 1):
     freq.at[i + 1, 'FREQ'] = freq['DATE'][i + 1].month - freq['DATE'][i].month
 
-#freq.to_excel("Output.xlsx",sheet_name='frequency')
+sheetName = 'frequency'
+freq.to_excel(writer, sheet_name=sheetName, startrow=writer.sheets[sheetName].max_row, index=False)
 
 # GET TOTALS REPORT
 
@@ -133,10 +149,12 @@ reported_totals = input[input['CL_AGE_GROUP_EN_V1'] == 'Total'].groupby(
     ).agg({"Obs_toNumber": "sum"})
 actual_totals = input[input['CL_AGE_GROUP_EN_V1'] != 'Total'].groupby(['TIME_PERIOD_Y', 'TIME_PERIOD_M', 'CL_SEX_EN_V2']
                                                                       ).agg({"Obs_toNumber": "sum"})
-totals = reported_totals.merge(actual_totals, on=['TIME_PERIOD_Y', 'TIME_PERIOD_M', 'CL_SEX_EN_V2'], how='left'
+totals = reported_totals.merge(actual_totals, on=['TIME_PERIOD_Y', 'TIME_PERIOD_M', 'CL_SEX_EN_V2'], how='right'
                                ).merge(reported_totals - actual_totals,
                                        on=['TIME_PERIOD_Y', 'TIME_PERIOD_M', 'CL_SEX_EN_V2'], how='left')
 totals.columns = ['Reported Total', 'Actual Total', 'Reported-Actual']
 
+sheetName = 'total'
+totals.to_excel(writer, sheet_name=sheetName, startrow=writer.sheets[sheetName].max_row, index=False)
 
-#totals.to_excel("Output.xlsx",sheet_name='total')
+writer.save()
