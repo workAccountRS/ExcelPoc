@@ -1,6 +1,8 @@
 import cx_Oracle
 import config
 
+# TEST 1
+# TEST 2
 
 # TEST 1
 # TEST 2
@@ -55,8 +57,7 @@ class DB:
             print('---------------------relational_db---------------------')
 
     def getRowByNumber(self, rowNumber='1'):
-        sql = """with cte as (select relational_db.*, ROW_NUMBER() OVER (ORDER BY batch_id) R from relational_db) select * from cte where R ={0}""".format(
-            rowNumber)
+        sql = """with cte as (select relational_db.*, ROW_NUMBER() OVER (ORDER BY batch_id) R from relational_db) select * from cte where R ={0}""".format(rowNumber)
         print(':::::', sql)
         cursor = self.connection.cursor()
         for each in cursor.execute(sql):
@@ -71,6 +72,7 @@ class DB:
         cursor = self.connection.cursor()
         cursor.execute(sql)
         self.connection.commit()
+
 
     def insertIntoRelationalDB(self, PUBLICATION_NAME_AR,
                                PUBLICATION_NAME_EN,
@@ -199,3 +201,4 @@ class DB:
     #     if not rows:
     #         break
     #     cursor_dev.executemany(sql_load, rows)
+

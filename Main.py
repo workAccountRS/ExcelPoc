@@ -44,6 +44,8 @@ for rowNumber in range(2, excelHandler.getMaxRow(sheet='S2T Mapping') + 1):
     cell_target = currentRowData[3]
     dataType = currentRowData[4]
 
+
+
     if sheet_target == 'NA':
         skipedRows.append(rowNumber)
         continue
@@ -71,53 +73,55 @@ for rowNumber in range(2, excelHandler.getMaxRow(sheet='S2T Mapping') + 1):
         # WRITE TO LANDING DB
         # GET MAX COLUMN
 
+        # LOOP FROM A TO LAST COL
         excelHandler.writeCell(sheet='Landing DB', cell=str('A' + str(lastRow)), value=sheet_source)
         excelHandler.writeCell(sheet='Landing DB', cell=str('B' + str(lastRow)), value=cell_source)
         excelHandler.writeCell(sheet='Landing DB', cell=str('C' + str(lastRow)), value=source_data)
         excelHandler.writeCell(sheet='Landing DB', cell=str('D' + str(lastRow)), value=currentTime)
         excelHandler.writeCell(sheet='Landing DB', cell=str('E' + str(lastRow)), value=str(BatchID))
 
-        db.insertIntoLandingDB(sheet_source, cell_source, source_data, currentTime, BatchID, dataType)
+        # db.insertIntoLandingDB(sheet_source, cell_source, source_data, currentTime, BatchID, dataType)
 
     except Exception as e:
-        print("ERROR IN ROW#" + str(rowNumber) + " -- " + e)
+        print("ERROR IN ROW#" + str(rowNumber) + " -- " + str(e))
         errors.append(['ROW NUMBER:' + str(rowNumber), 'CELL SOURCE:' + cell_source, 'CELL TARGET:' + cell_target])
 
     # NEXT ROW TO WRITE
     lastRow += 1
 
 # OPEN THE Relational DB
-for rowNumber in range(4, excelHandler.getMaxRow(sheet='Relational DB') + 1):
-    currentRowData = excelHandler.getRowDataFromSheet(sheet='Relational DB', row=rowNumber)
-    db.insertIntoRelationalDB(currentRowData[0],
-                              currentRowData[1],
-                              currentRowData[2],
-                              currentRowData[3],
-                              currentRowData[4],
-                              currentRowData[5],
-                              currentRowData[6],
-                              currentRowData[7],
-                              currentRowData[8],
-                              currentRowData[9],
-                              currentRowData[10],
-                              currentRowData[11],
-                              currentRowData[12],
-                              currentRowData[13],
-                              currentRowData[14],
-                              currentRowData[15],
-                              currentRowData[16],
-                              currentRowData[17],
-                              currentRowData[18],
-                              currentRowData[19],
-                              currentRowData[20],
-                              currentRowData[21],
-                              currentRowData[22],
-                              currentRowData[23],
-                              currentRowData[24])
+# for rowNumber in range(4, excelHandler.getMaxRow(sheet='Relational DB') + 1):
+#     currentRowData = excelHandler.getRowDataFromSheet(sheet='Relational DB', row=rowNumber)
+#     db.insertIntoRelationalDB(currentRowData[0],
+#                               currentRowData[1],
+#                               currentRowData[2],
+#                               currentRowData[3],
+#                               currentRowData[4],
+#                               currentRowData[5],
+#                               currentRowData[6],
+#                               currentRowData[7],
+#                               currentRowData[8],
+#                               currentRowData[9],
+#                               currentRowData[10],
+#                               currentRowData[11],
+#                               currentRowData[12],
+#                               currentRowData[13],
+#                               currentRowData[14],
+#                               currentRowData[15],
+#                               currentRowData[16],
+#                               currentRowData[17],
+#                               currentRowData[18],
+#                               currentRowData[19],
+#                               currentRowData[20],
+#                               currentRowData[21],
+#                               currentRowData[22],
+#                               currentRowData[23],
+#                               currentRowData[24])
 
 # Save the spreadsheet
 excelHandler.saveSpreadSheet(fileName=InputFileName)
 
+selectedRow = db.getRowByNumber(rowNumber=1)
 
 # db.printDescription()
 # db.print2()
@@ -131,5 +135,3 @@ print("SKIPPED ROWS: ", skipedRows)
 
 # TO CALCULATE EXECUTION TIME
 print("--- Took %s seconds to process ---" % (time.time() - start_time))
-
-
