@@ -5,49 +5,52 @@ import datetime
 
 class ValidationRules:
 
-    def check_notnull(self):
-        return self is not None
+    def notnull(self,input):
+        return input is not None
 
-    def check_type(self, data_type="text", date_format=None):
+    def data_type(self,input, data_type="text", date_format=None):
         if data_type == "text":
-            return isinstance(self, str)
+            return isinstance(input, str)
 
         elif data_type == "number":
             number_types = (int, float, complex)
-            return isinstance(self, number_types)
+            return isinstance(input, number_types)
 
         elif data_type == "date":
             try:
-                datetime.datetime.strptime(self, date_format)
+                datetime.datetime.strptime(input, date_format)
                 return True
             except ValueError:
                 return False
 
-    # check logic
-    def check_lang(self, lang=None):
+    def lang(self,input,lang='ar'):
         if lang == 'ar':
-            alphabet = ['ا', 'ب', 'ي', 'و', 'ه', 'ن', 'م', 'ل', 'ك', 'ق', 'ف', 'غ', 'ع', 'ظ', 'ط', 'ض', 'ص', 'ش', 'س',
-                        'ز', 'ر', 'ذ', 'د', 'خ', 'ح', 'ج', 'ث', 'ت']
+            alphabet = ['ا', 'ب', 'ي', 'و', 'ه', 'ن', 'م', 'ل', 'ك', 'ق', 'ف', 'غ', 'ع', 'ظ', 'ط', 'ض', 'ص',
+                        'ش', 'س','ز', 'ر', 'ذ', 'د', 'خ', 'ح', 'ج', 'ث', 'ت']
         elif lang == 'en':
-            alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
-                        't', 'u', 'v', 'w', 's', 'y', 'z']
+            alphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q',
+                        'r', 's','t', 'u', 'v', 'w', 's', 'y', 'z']
 
-        for i in self:
+        for i in input:
             if isinstance(i, str):
                 if i in alphabet:
                     return True
-                else:
-                    return False
 
-    def freq(self, prev=None, freq=None):
+        return False
+
+    def freq(self,input, prev=None, freq=None):
         if prev is None:
             return True
 
         else:
-            return abs(prev - self) == freq
+            return abs(prev - input) == freq
 
-    def check_special_type(self):
+    def check_dict(self,input,col_name,lookup):
+       if input in [row['DESCRIPTION'] for col, row in lookup.iterrows() if row['CL_ID'] == col_name]:
+           return True
+       else:
+           return False
+
+    def check_special_type(input):
         pass
 
-    def check_dict(self):
-        pass
